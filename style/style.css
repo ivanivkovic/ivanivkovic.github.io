@@ -1,7 +1,5 @@
 html,body{height:100%}
 
-::selection {background:black;}
-::-moz-selection {background:#333;}
 
 #container{
 	width:100%;
@@ -43,11 +41,11 @@ html,body{height:100%}
 
 #links .image{
 	position:absolute;
-	top:80px;
-	left: 80px;
+	top:84px;
+	left: 86px;
 	display:inline-block;
-	width:198px;
-	height:198px;
+	width:188px;
+	height:188px;
 	border-radius:101px;
 	-webkit-border-radius: 101px;
 	-moz-border-radius: 101px;
@@ -101,6 +99,7 @@ html,body{height:100%}
 
 #footer h3 > a{
 	text-decoration:none;
+	display: inline-block;
 } 
 
 #footer h3{
@@ -203,10 +202,28 @@ html,body{height:100%}
 {
 	opacity:0.9;
 }
+
 #links .link:hover
 {
 	opacity:1;
 }
+
+.hover-transform-enlarge{
+  transition: transform 0.3s ease;
+}
+
+.hover-transform-enlarge:hover{
+	transform: scale(1.2);
+}
+
+.hover-transform-shrink{
+  transition: transform 0.3s ease;
+}
+
+.hover-transform-shrink:hover{
+	transform: scale(0.9);
+}
+
 
 .odesk
 {
@@ -281,4 +298,18 @@ html,body{height:100%}
 .soundcloud
 {
 	background-image:url('icons/soundcloud.png');
+}
+
+.instagram
+{
+	background-image:url('icons/instagram.png');
+	background-size: contain;
+	background-position-y: 4px;
+}
+
+.tiktok
+{
+	background-image:url('icons/tiktok.png');
+	background-size: contain;
+	background-position-y: 4px;
 }
