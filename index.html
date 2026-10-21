@@ -3,18 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Ivan Ivković — Integration Consultant at Infobip & Musician." />
+    <meta name="description" content="Ivan Ivković — Senior Integration Consultant at Infobip & Musician." />
     <meta name="author" content="Ivan Ivković" />
     <meta name="theme-color" content="#101e29" />
-    <title>Ivan Ivković | Integration Consultant & Musician</title>
+    <title>Ivan Ivković | Senior Integration Consultant & Musician</title>
     <link rel="preload" href="style/fonts/Manrope.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="style/style.css" />
     <link rel="stylesheet" href="style/media.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <script src="style/site.js" defer></script>
+    <script src="style/water.js" defer></script>
   </head>
   <body>
-    <div class="landscape" aria-hidden="true"></div>
+    <div class="landscape" aria-hidden="true"><canvas class="water-surface"></canvas></div>
     <main class="page">
       <header class="heading">
         <h1>Ivan Ivković</h1>
@@ -81,7 +82,7 @@
       </div>
 
       <footer class="footer">
-        <p class="roles"><span>Integration consultant at <a href="https://www.infobip.com" target="_blank" rel="noopener noreferrer">Infobip</a></span><span class="role-divider" aria-hidden="true">/</span><span>Musician</span></p>
+        <p class="roles"><span>Senior integration consultant at <a href="https://www.infobip.com" target="_blank" rel="noopener noreferrer">Infobip</a></span><span class="role-divider" aria-hidden="true">/</span><span>Musician</span></p>
         <div class="divider" aria-hidden="true"></div>
         <a class="contact" href="mailto:ivan@ivanivkovic.me">open to side projects <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
       </footer>
@@ -89,5 +90,10 @@
       <noscript><p class="discord-fallback">Discord: dragularob</p></noscript>
     </main>
     <div class="copy-notice" role="status" aria-live="polite" aria-atomic="true"></div>
+    <button class="water-toggle" type="button" aria-label="Pause water animation" hidden>
+      <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+      <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
+      <span class="tooltip" aria-hidden="true">Pause water</span>
+    </button>
   </body>
 </html>

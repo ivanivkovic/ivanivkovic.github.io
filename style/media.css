@@ -1,12 +1,11 @@
 @media (max-width: 540px) {
   .page { padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: max(36px, env(safe-area-inset-bottom)); }
-  h1 { font-size: clamp(1.9rem, 8.5vw, 2.4rem); }
+  h1 { font-size: clamp(1.5rem, 6.8vw, 1.75rem); }
   .constellation { margin: 22px 0 29px; }
   .roles { flex-direction: column; gap: 5px; font-size: 11px; letter-spacing: 0.08em; }
   .role-divider { display: none; }
   .divider { margin: 21px auto 17px; }
   .contact { font-size: 14px; }
-  .landscape { background-position: 46% center; }
 }
 
 @media (max-width: 340px) {
@@ -18,7 +17,7 @@
 @media (max-height: 700px) and (min-width: 541px) {
   :root { --orbit-size: min(350px, calc(100vw - 36px)); }
   .page { padding-top: 24px; padding-bottom: 28px; }
-  h1 { font-size: 2.5rem; }
+  h1 { font-size: 1.75rem; }
   .constellation { margin: 12px 0 18px; }
   .divider { margin: 18px auto 14px; }
 }
