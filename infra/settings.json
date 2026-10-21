@@ -1,0 +1,6 @@
+{
+  "region": "eu-central-1",
+  "stack_name": "ivanivkovic-personal-website",
+  "domain_name": "www.ivanivkovic.me",
+  "certificate_arn": "arn:aws:acm:us-east-1:500527826031:certificate/05bd5cd3-329b-48fe-b4ec-4bb1601c8ab1"
+}
