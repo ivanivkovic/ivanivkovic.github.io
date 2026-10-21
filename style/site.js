@@ -1,9 +1,9 @@
 (() => {
-  const copyButton = document.querySelector('[data-copy]');
+  const copyButtons = [...document.querySelectorAll('[data-copy]')];
   const notice = document.querySelector('.copy-notice');
   let noticeTimer;
 
-  copyButton.addEventListener('click', async () => {
+  copyButtons.forEach((copyButton) => copyButton.addEventListener('click', async () => {
     window.clearTimeout(noticeTimer);
     let copied = false;
     try {
@@ -15,11 +15,11 @@
     notice.textContent = copied ? 'Copied Discord username: dragularob' : 'Discord username: dragularob';
     notice.classList.add('is-visible');
     if (copied) noticeTimer = window.setTimeout(() => notice.classList.remove('is-visible'), 4500);
-  });
+  }));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') notice.classList.remove('is-visible');
   });
   document.addEventListener('pointerdown', (event) => {
-    if (!notice.contains(event.target) && !copyButton.contains(event.target)) notice.classList.remove('is-visible');
+    if (!notice.contains(event.target) && !copyButtons.some(button => button.contains(event.target))) notice.classList.remove('is-visible');
   });
 })();

@@ -47,10 +47,10 @@
         + vec2(-0.6, 0.8) * cos(b) * 0.48
         + vec2(0.95, -0.31) * cos(c) * 0.24;
       vec2 uv = (v_uv - 0.5) * u_cover + 0.5;
-      uv += flow * vec2(1.0 / u_aspect, 1.0) * u_cover * 0.0032;
+      uv += flow * vec2(1.0 / u_aspect, 1.0) * u_cover * 0.0048;
       vec3 color = texture2D(u_image, uv).rgb;
-      float light = sin(a + 0.8) * sin(b - 0.5) * 0.021
-        + sin(c + a) * 0.009;
+      float light = sin(a + 0.8) * sin(b - 0.5) * 0.027
+        + sin(c + a) * 0.012;
       color *= 1.0 + light;
       color += vec3(0.65, 0.8, 0.72) * max(light, 0.0) * 0.08;
       gl_FragColor = vec4(color, 1.0);

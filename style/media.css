@@ -1,6 +1,6 @@
 @media (max-width: 540px) {
   .page { padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: max(36px, env(safe-area-inset-bottom)); }
-  h1 { font-size: clamp(1.5rem, 6.8vw, 1.75rem); }
+  h1 { font-size: clamp(1.7rem, 7.7vw, 2rem); }
   .constellation { margin: 22px 0 29px; }
   .roles { flex-direction: column; gap: 5px; font-size: 11px; letter-spacing: 0.08em; }
   .role-divider { display: none; }
@@ -12,12 +12,13 @@
   :root { --orbit-size: calc(100vw - 24px); }
   .social-slot { width: 16%; height: 16%; }
   .roles { font-size: 10px; }
+  .water-toggle { top: max(16px, env(safe-area-inset-top)); bottom: auto; }
 }
 
 @media (max-height: 700px) and (min-width: 541px) {
   :root { --orbit-size: min(350px, calc(100vw - 36px)); }
   .page { padding-top: 24px; padding-bottom: 28px; }
-  h1 { font-size: 1.75rem; }
+  h1 { font-size: 2rem; }
   .constellation { margin: 12px 0 18px; }
   .divider { margin: 18px auto 14px; }
 }
