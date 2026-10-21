@@ -16,7 +16,7 @@ Install AWS CLI v2 and authenticate to the website's AWS account. From the repos
 python3 scripts/deploy.py
 ```
 
-The script deploys `infra/cloudfront.json`, uploads only public site files, removes obsolete objects from this website's bucket, and waits for a CloudFront cache invalidation. Infrastructure and deployment scripts are excluded from S3. An already-enabled custom domain stays enabled on later deployments. Changes pushed to GitHub must also be deployed with this command; there is no automatic GitHub-to-AWS pipeline.
+The script deploys `infra/cloudfront.json`, uploads only public site files, removes obsolete objects from this website's bucket, and waits for a CloudFront cache invalidation. Infrastructure and deployment scripts are excluded from S3. An already-enabled custom domain stays enabled on later deployments. The domain-only commands below update infrastructure without uploading workspace content. Changes pushed to GitHub must also be deployed with this command; there is no automatic GitHub-to-AWS pipeline.
 
 The bucket blocks public access. CloudFront uses signed origin requests, redirects HTTP to HTTPS, and caches site content for five minutes. The bucket is retained if the infrastructure stack is deleted. Hosting uses AWS pay-as-you-go services.
 
@@ -47,4 +47,22 @@ Enter just the CloudFront hostname, without `https://` or a path. Replace the ex
 
 This setup connects `www.ivanivkovic.me`. The bare `ivanivkovic.me` domain still uses its existing routing; its forwarding can be configured separately. Do not create a CNAME at the root (`@`).
 
-References: [CloudFront certificate requirements](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html), [private S3 origins](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html), [GoDaddy CNAME records](https://www.godaddy.com/help/add-a-cname-record-19236).
+## Existing CloudFront domain association
+
+The certificate has been issued, but AWS rejected the initial domain activation with `CNAMEAlreadyExists`: `www.ivanivkovic.me` is already associated with another CloudFront resource. AWS confirmed a distribution ending in `65PNT0T`, in a different account ending in `351177`. This is separate from the editable GoDaddy `www` DNS record; changing or deleting that record does not release the AWS association.
+
+Prepare this distribution with the issued certificate while leaving the conflicting alias unattached:
+
+```sh
+python3 scripts/deploy.py --prepare-domain
+```
+
+Add this additional ownership-verification record in GoDaddy:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| TXT | `_www` | `d1jqfe9oaws8g7.cloudfront.net` |
+
+After it propagates, find the source resource and attempt the documented domain transfer. If the source is in a different account and is still enabled, AWS Support must verify ownership and move the domain. The target distribution ID is `E2CKAYNCFFB4QM`. Do not change the `www` routing CNAME until the target association is active. After the transfer, run `python3 scripts/deploy.py --enable-domain` to reconcile the CloudFormation configuration.
+
+References: [CloudFront certificate requirements](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html), [private S3 origins](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html), [GoDaddy CNAME records](https://www.godaddy.com/help/add-a-cname-record-19236), [CloudFront domain transfers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move-options.html).

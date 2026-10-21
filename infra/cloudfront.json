@@ -3,10 +3,12 @@
   "Description": "Ivan Ivkovic personal website: private S3 origin and HTTPS CloudFront hosting",
   "Parameters": {
     "DomainName": {"Type": "String", "Default": "www.ivanivkovic.me"},
-    "CertificateArn": {"Type": "String", "Default": ""}
+    "CertificateArn": {"Type": "String", "Default": ""},
+    "EnableCustomDomain": {"Type": "String", "Default": "true", "AllowedValues": ["true", "false"]}
   },
   "Conditions": {
-    "HasCertificate": {"Fn::Not": [{"Fn::Equals": [{"Ref": "CertificateArn"}, ""]}]}
+    "HasCertificate": {"Fn::Not": [{"Fn::Equals": [{"Ref": "CertificateArn"}, ""]}]},
+    "HasCustomDomain": {"Fn::And": [{"Condition": "HasCertificate"}, {"Fn::Equals": [{"Ref": "EnableCustomDomain"}, "true"]}]}
   },
   "Resources": {
     "SiteBucket": {
@@ -48,7 +50,7 @@
           "HttpVersion": "http2and3",
           "IPV6Enabled": true,
           "PriceClass": "PriceClass_100",
-          "Aliases": {"Fn::If": ["HasCertificate", [{"Ref": "DomainName"}], {"Ref": "AWS::NoValue"}]},
+          "Aliases": {"Fn::If": ["HasCustomDomain", [{"Ref": "DomainName"}], {"Ref": "AWS::NoValue"}]},
           "ViewerCertificate": {
             "Fn::If": [
               "HasCertificate",
