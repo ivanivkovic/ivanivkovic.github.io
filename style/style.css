@@ -172,14 +172,14 @@ h1 {
 .github { --x: 14.49%; --y: 29.5%; --brand: #d5e2eb; --icon: url("icons/github.svg"); --step: 0; }
 .youtube { --x: 29.5%; --y: 14.49%; --brand: #ff625b; --icon: url("icons/youtube.svg"); --step: 1; }
 .upwork { --x: 50%; --y: 9%; --brand: #8bcb6a; --icon: url("icons/upwork.svg"); --step: 2; }
-.behance { --x: 70.5%; --y: 14.49%; --brand: #7ba6ff; --icon: url("icons/behance.svg"); --step: 3; }
+.steam { --x: 70.5%; --y: 14.49%; --brand: #9dd2ed; --icon: url("icons/steam.svg"); --step: 3; }
 .soundcloud { --x: 85.51%; --y: 29.5%; --brand: #f6a365; --icon: url("icons/soundcloud.svg"); --step: 4; }
 .tiktok { --x: 85.51%; --y: 70.5%; --brand: #7be5df; --icon: url("icons/tiktok.svg"); --step: 5; }
 .instagram { --x: 70.5%; --y: 85.51%; --brand: #e9a0be; --icon: url("icons/instagram.svg"); --step: 6; }
 .email { --x: 50%; --y: 91%; --brand: #e4c58f; --icon: url("icons/email.svg"); --step: 7; }
 .linkedin { --x: 29.5%; --y: 85.51%; --brand: #83bbeb; --icon: url("icons/linkedin.svg"); --step: 8; }
 .discord { --x: 14.49%; --y: 70.5%; --brand: #b1adff; --icon: url("icons/discord.svg"); --step: 9; }
-.behance .social-icon, .soundcloud .social-icon { width: 51%; height: 51%; }
+.soundcloud .social-icon { width: 51%; height: 51%; }
 
 .footer { text-align: center; }
 .roles {
