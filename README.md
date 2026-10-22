@@ -1,70 +1,35 @@
 # Ivan Ivkovic personal website
 
-The original HTML/CSS site is hosted on Amazon CloudFront with a private S3 origin.
+The site is hosted by GitHub Pages from the root of the `master` branch in `ivanivkovic/ivanivkovic.github.io`.
 
-- CloudFront: https://d1jqfe9oaws8g7.cloudfront.net
-- Custom domain, after DNS validation and activation: https://www.ivanivkovic.me
-- AWS region: `eu-central-1`
-- CloudFormation stack: `ivanivkovic-personal-website`
-- Distribution: `E2CKAYNCFFB4QM`
+- Primary domain: https://ivanivkovic.me
+- GitHub Pages source: https://github.com/ivanivkovic/ivanivkovic.github.io/tree/master
+- `CNAME` records the custom domain. Keep it in the publishing branch.
 
-## Deploy
+## Publish updates
 
-Install AWS CLI v2 and authenticate to the website's AWS account. From the repository root:
+Commit and push site changes to `master`. GitHub Pages automatically builds and deploys the branch; no AWS deployment command is required for the primary site.
 
-```sh
-python3 scripts/deploy.py
-```
+## GoDaddy DNS
 
-The script deploys `infra/cloudfront.json`, uploads only public site files, removes obsolete objects from this website's bucket, and waits for a CloudFront cache invalidation. Infrastructure and deployment scripts are excluded from S3. An already-enabled custom domain stays enabled on later deployments. The domain-only commands below update infrastructure without uploading workspace content. Changes pushed to GitHub must also be deployed with this command; there is no automatic GitHub-to-AWS pipeline.
-
-The bucket blocks public access. CloudFront uses signed origin requests, redirects HTTP to HTTPS, and caches site content for five minutes. The bucket is retained if the infrastructure stack is deleted. Hosting uses AWS pay-as-you-go services.
-
-## Connect the GoDaddy domain
-
-In GoDaddy, open `ivanivkovic.me` and select **DNS**. Add these certificate-validation records, using the names exactly as shown without appending the domain. Leave TTL at its default.
+GitHub has accepted `ivanivkovic.me` as the custom domain. Public authoritative DNS currently returns the GoDaddy parking addresses `3.33.130.190` and `15.197.148.33`; these are observed DNS answers, not a snapshot of the GoDaddy editor. Identify the existing A record or managed parking entry named `@` in GoDaddy and replace that parking configuration with all four A records below. If the entry is locked, inspect domain forwarding before making changes. Edit the existing `www` CNAME to point directly to the GitHub Pages hostname.
 
 | Type | Name | Value |
 | --- | --- | --- |
-| CNAME | `_39ee25353a7d4d25b2cd6498e9c846f9.www` | `_51a6802b5cfb6bf2091db52acbeed14c.wzccmgtwzk.acm-validations.aws` |
-| CNAME | `_1b25f8f290f6ef672ed24dbc315fd5b2` | `_e39ea11d5fd6f11e990f9eda365ba100.wzccmgtwzk.acm-validations.aws` |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `ivanivkovic.github.io` |
 
-Keep both validation records for automatic certificate renewal. The ACM certificate is in `us-east-1`, as required by CloudFront. Its ARN is recorded in `infra/settings.json`.
+Use the default TTL. Preserve MX records and email-related TXT records. Do not add a CNAME at the root (`@`). The AWS validation CNAMEs and ownership TXT record can remain while the old AWS resources are retained.
 
-After ACM reports `ISSUED`, enable the custom domain and wait for deployment to finish:
+Once DNS resolves to GitHub, GitHub can provision a TLS certificate. Enable **Enforce HTTPS** in the repository's Pages settings when the certificate is available. The configured primary domain is the bare domain; a correctly configured `www` record redirects there.
 
-```sh
-python3 scripts/deploy.py --enable-domain
-```
+References: [GitHub custom domains and DNS](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site), [GitHub Pages HTTPS](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
 
-Then edit the existing `www` CNAME record:
+## Previous AWS hosting
 
-| Type | Name | Value |
-| --- | --- | --- |
-| CNAME | `www` | `d1jqfe9oaws8g7.cloudfront.net` |
+The secondary CloudFront URL remains https://d1jqfe9oaws8g7.cloudfront.net. Its S3 bucket and distribution have not been deleted. Neither `ivanivkovic.me` nor `www.ivanivkovic.me` is attached to that distribution because both names are associated with an inaccessible, enabled distribution in another AWS account.
 
-Enter just the CloudFront hostname, without `https://` or a path. Replace the existing `www` record rather than adding a conflicting duplicate. Preserve MX, TXT, and other email records. Check https://www.ivanivkovic.me after DNS propagation.
-
-This setup connects `www.ivanivkovic.me`. The bare `ivanivkovic.me` domain still uses its existing routing; its forwarding can be configured separately. Do not create a CNAME at the root (`@`).
-
-## Existing CloudFront domain association
-
-The certificate has been issued, but AWS rejected the initial domain activation with `CNAMEAlreadyExists`: `www.ivanivkovic.me` is already associated with another CloudFront resource. AWS confirmed a distribution ending in `65PNT0T`, in a different account ending in `351177`. This is separate from the editable GoDaddy `www` DNS record; changing or deleting that record does not release the AWS association.
-
-Prepare this distribution with the issued certificate while leaving the conflicting alias unattached:
-
-```sh
-python3 scripts/deploy.py --prepare-domain
-```
-
-Add this additional ownership-verification record in GoDaddy:
-
-| Type | Name | Value |
-| --- | --- | --- |
-| TXT | `_www` | `d1jqfe9oaws8g7.cloudfront.net` |
-
-After it propagates, find the source resource and attempt the documented domain transfer. If the source is in a different account and is still enabled, AWS Support must verify ownership and move the domain. The target distribution ID is `E2CKAYNCFFB4QM`. Do not change the `www` routing CNAME until the target association is active. After the transfer, run `python3 scripts/deploy.py --enable-domain` to reconcile the CloudFormation configuration.
-
-The TXT record is published. Both transfer APIs were attempted; AWS explicitly reports that the source distribution is still enabled, so the move requires AWS Support. A ready-to-send request is in [infra/domain-transfer-support.md](infra/domain-transfer-support.md). The target distribution is deployed with the issued certificate; the website remains available at the CloudFront URL while support releases the old association.
-
-References: [CloudFront certificate requirements](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html), [private S3 origins](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html), [GoDaddy CNAME records](https://www.godaddy.com/help/add-a-cname-record-19236), [CloudFront domain transfers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move-options.html).
+The previous deployment details and troubleshooting notes are preserved in [infra/cloudfront-hosting.md](infra/cloudfront-hosting.md). They are not needed to publish the GitHub Pages site.
